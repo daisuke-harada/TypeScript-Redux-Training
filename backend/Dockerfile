@@ -6,11 +6,17 @@ ENV APP_PATH /rails
 
 WORKDIR $APP_PATH
 
-COPY Gemfile Gemfile.lock ./
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev && \
-    bundle install
+COPY Gemfile $APP_PATH/Gemfile
+COPY Gemfile.lock $APP_PATH/Gemfile.lock
 
-COPY . .
+# 必要なパッケージのインストールを一度に行い、キャッシュを有効活用
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev && \
+    # bundle installの前にgemをインストールしてキャッシュを利用
+    bundle config set --local without 'development test' && \
+    bundle install --jobs 4 --retry 3
+
+# アプリケーションのファイルをコピー
+COPY . $APP_PATH
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]
