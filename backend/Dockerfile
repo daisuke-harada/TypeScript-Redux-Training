@@ -1,6 +1,8 @@
 # syntax = docker/dockerfile:1
 
 ARG RUBY_VERSION=3.3.0
+# ビルド引数ENVIRONMENTを追加、デフォルトをdevelopmentに設定
+ARG ENVIRONMENT=development
 FROM ruby:$RUBY_VERSION-slim as base
 ENV APP_PATH /rails
 
@@ -10,10 +12,15 @@ COPY Gemfile $APP_PATH/Gemfile
 COPY Gemfile.lock $APP_PATH/Gemfile.lock
 
 # 必要なパッケージのインストールを一度に行い、キャッシュを有効活用
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev && \
-    # bundle installの前にgemをインストールしてキャッシュを利用
-    bundle config set --local without 'development test' && \
-    bundle install --jobs 4 --retry 3
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+
+# ENVIRONMENTがproductionの場合のみ、bundle configを実行
+RUN if [ "$ENVIRONMENT" = "production" ]; then \
+        bundle config set --local without 'development test'; \
+    fi
+
+# すべての環境でbundle installを実行
+RUN bundle install --jobs 4 --retry 3
 
 # アプリケーションのファイルをコピー
 COPY . $APP_PATH
