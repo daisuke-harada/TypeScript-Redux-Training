@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+20.times do
+  Task.create(
+    title: Faker::Lorem.sentence(word_count: 3),
+    created_at: Faker::Time.between(from: 30.days.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 30.days.ago, to: Date.today)
+  )
+end

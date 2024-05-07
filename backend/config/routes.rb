@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'tasks/index'
   namespace :api do
     namespace :v1 do
       get 'welcome', to: 'welcome#index'
