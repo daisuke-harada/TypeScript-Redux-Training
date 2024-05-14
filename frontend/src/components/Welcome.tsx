@@ -8,6 +8,8 @@ export const Welcome = () => {
   const message = useSelector((state: RootState) => state.welcome.message);
   const status = useSelector((state: RootState) => state.welcome.status);
 
+  console.log(status)
+
   useEffect(() => {
     dispatch(fetchWelcomeMessage());
   }, [dispatch]);
