@@ -4,7 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Routers } from './routes/Routers';
 import { Provider } from 'react-redux';
-import store from './store/store'; // この行を追加
+import store from './store/store'; // Added this line
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
